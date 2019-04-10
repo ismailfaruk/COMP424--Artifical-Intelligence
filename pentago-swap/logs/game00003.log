@@ -1,0 +1,19 @@
+# Server version 0.08 running on ASUS-K501UX:8123
+# Game ID: 3
+# Board class: pentago_swap.PentagoBoard
+# Timeout: 2000
+# First Move Timeout: 30000
+# Date: Fri Mar 29 15:34:35 EDT 2019
+# Player 1: Player-0, 'xxxxxxxxx', running on ASUS-K501UX
+# Player 2: Player-1, 'Human', running on ASUS-K501UX
+START Player-0 xxxxxxxxx
+START Player-1 Human
+5 2 TR BR 0
+3 2 TL BR 1
+0 3 TL TR 0
+4 4 TR BR 1
+4 0 BL BR 0
+3 3 BR TR 1
+2 2 TL BL 0
+GAMEOVER USER CANCEL UNDECIDED
+# Game ended: Fri Mar 29 15:34:51 EDT 2019
