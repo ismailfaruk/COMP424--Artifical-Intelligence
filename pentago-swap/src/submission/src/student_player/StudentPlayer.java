@@ -33,11 +33,6 @@ public class StudentPlayer extends PentagoPlayer {
      * make decisions.
      */
     public Move chooseMove(PentagoBoardState boardState) {
-        // You probably will make separate functions in MyTools.
-        // For example, maybe you'll need to load some pre-processed best opening
-        // strategies...
-        MyTools.getSomething();
-
         if (boardState.getTurnNumber() == 0) { 
 			return boardState.getRandomMove();
         }
