@@ -1,0 +1,152 @@
+package ismail_student_player;
+
+import boardgame.Move;
+
+import java.util.List;
+import java.util.Random;
+
+import com.sun.javafx.image.impl.BaseIntToByteConverter;
+
+import pentago_swap.PentagoPlayer;
+import pentago_swap.PentagoBoardState;
+import pentago_swap.PentagoMove;
+
+/** A player file submitted by a student. */
+public class StudentPlayer extends PentagoPlayer {
+
+	// player and opponent id
+	private int player;
+    private int opponent;
+    
+    /**
+     * You must modify this constructor to return your student number. This is
+     * important, because this is what the code that runs the competition uses to
+     * associate you with your agent. The constructor should do nothing else.
+     */
+    public StudentPlayer() {
+        super("260663521");
+    }
+
+    /**
+     * This is the primary method that you need to implement. The ``boardState``
+     * object contains the current state of the game, which your agent must use to
+     * make decisions.
+     */
+    public Move chooseMove(PentagoBoardState boardState) {
+        // You probably will make separate functions in MyTools.
+        // For example, maybe you'll need to load some pre-processed best opening
+        // strategies...
+        MyTools.getSomething();
+
+        if (boardState.getTurnNumber() == 0) { 
+			return boardState.getRandomMove();
+        }
+
+        Move myMove = negamaxCaller(boardState);
+
+        // Return your move to be processed by the server.
+        return myMove;
+    }
+
+    /**
+     * Helper method that clones the current board state and passes 
+     * it to the negamax algorithm
+     * 
+     * @param boardState
+     * @return bestMove
+     */
+    public Move negamaxCaller(PentagoBoardState boardState) {
+    	player = player_id;
+    	opponent = boardState.getOpponent();
+        
+        // Max depth of the tree, finishes with depth 2 given constraints
+        int depth = 2; 
+        // initializing alpha and beta as possible max and min
+        int alpha = Integer.MIN_VALUE; 
+        int beta = Integer.MAX_VALUE;
+
+    	// get all moves
+        List<PentagoMove> options = boardState.getAllLegalMoves();
+        
+    	// initializing the variable bestMove with a random move
+    	Random rand = new Random();
+    	int doRandom = rand.nextInt(options.size());
+        PentagoMove bestMove = options.get(doRandom);
+    	int bestValue = alpha;  //lowest value possible
+    	int value;
+    	
+    	// Evaluate move options
+    	for (PentagoMove move : options) {
+    		// Requires cloning, to keep the actual board intact
+    		PentagoBoardState cloneState = (PentagoBoardState) boardState.clone();
+    		// Process the move on the cloned board
+    		cloneState.processMove(move);
+            //call the negamax function
+            value = negamax(cloneState, alpha, beta, depth);
+            // update bestValue depending on the value returned by negamax
+            if (value > bestValue) {
+                bestMove = move;
+                bestValue = value;
+            }
+    	}
+    	return bestMove;
+    }
+
+    /**
+     * Negamax algorithm to find value of movies
+     * 
+     * @param boardState
+     * @param alpha
+     * @param beta
+     * @param depth
+     * @return bestMove
+     */
+    public int negamax(PentagoBoardState boardState, int alpha, int beta, int depth) {
+        List<PentagoMove> options = boardState.getAllLegalMoves();
+        int bestValue = alpha;
+        int value;
+
+        // terminal case
+    	if (depth == 0 || boardState.gameOver()){
+    		return utility(boardState);
+        }
+
+        for (PentagoMove move : options) {
+    		// Requires cloning, to keep the actual board intact
+    		PentagoBoardState cloneState = (PentagoBoardState) boardState.clone();
+    		// Process the move on the cloned board
+    		cloneState.processMove(move);
+    		// recursively call minimax, the max player is false initially
+            value = -negamax(cloneState, -beta, -alpha, depth-1);
+            // update bestValue depending on the value returned by minimax
+            
+            bestValue = Math.max(value, bestValue);
+
+            if (bestValue >= beta){ 
+                return beta;
+            }
+
+            if (value > alpha) {
+                alpha = bestValue;
+            }
+        }
+        return bestValue;
+    }
+    
+    /**
+     * Utility function for the minimax algorithm
+     * 
+     * @param boardState
+     * @return score
+     */
+    public int utility(PentagoBoardState boardState) {
+    	int score = 0;
+        if (player == boardState.getWinner()) {
+        	score += 100;
+        }
+        else if (opponent == boardState.getWinner()) {
+        	score -= 100;
+        }
+        return score;
+    }
+}

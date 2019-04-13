@@ -126,7 +126,7 @@ public class StudentPlayer extends PentagoPlayer {
                 return beta;
             }
 
-            if (value > alpha) {
+            if (bestValue > alpha) {
                 alpha = bestValue;
             }
         }
